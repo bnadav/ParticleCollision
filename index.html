@@ -3,6 +3,14 @@
   <head>
     <meta http-equiv="content-type" content="text/html; charset=utf-8" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script> 
+    <script src='particle.js'></script>
+    <script> 
+      simulator = {};
+      window.particles = [new Particle(20,20,10,1,0,-1,"red")];
+    </script> 
+    <script src='event.js'></script>
+    <script src='min_pq.js'></script>
+    <script src='board.js'></script>
     <script src='collision_system.js'></script>
 
     <title></title>
@@ -11,11 +19,11 @@
         border: 1px solid black;
       }
     </style>
-    
+
   </head>
   <body>
     <canvas>
-      
+
     </canvas>
   </body>
 </html>
