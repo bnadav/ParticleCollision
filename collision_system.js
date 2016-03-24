@@ -32,7 +32,6 @@ $(function(){
         console.log("Event no valid"); 
         fetch_collision();   // ignore current event
       }
-<<<<<<< HEAD
     }
   }
 
@@ -68,43 +67,6 @@ $(function(){
       if (event.pa_index === null) { horizontal_collision(event) }
       else if(event.pb_index == null) { vertical_collision(event) }
   }
-=======
-    }
-  }
-
-  function progress_time(event) {
-    var delta = event.time - timer;
-    var ev = event;
-    tick();
-
-    function tick() {
-      //console.log("timer = " + timer + " event time " + ev.time);
-      if(timer <= ev.time) {
-        particles.forEach(function(p){p.progress()});
-        //console.log(p.y);
-        //simulator.board.draw();
-		timer++;
-        setTimeout(tick, 100);
-      }
-      else {
-        after_draw(ev);
-      }
-    }
-  }
-
-  function after_draw(event) {
-    console.log(event.pa_index + " " + particles[event.pa_index].y + " num evets " + simulator.events.l_index());
-    calculate_collisions(event);
-    fetch_collision();  // to next phase
-  }
-
-  function calculate_collisions(event) {
-      vertical_collision(event);
-      //simulator.board.draw(loop_action);
-      //if (event.pa == null) { horizontal_collision(event) }
-      //else if(event.pb == null) { vertical_collision(event) }
-  }
->>>>>>> 345ca3b9d6f97716665ce75924eb86e98660cdfb
 
   function insert_vertical_collisoin(particle_index) {
     var event;
@@ -117,14 +79,7 @@ $(function(){
       event = new Ev(c_time, particle_index, null);
       obj.key = c_time; obj.value = event;
       simulator.events.insert(obj);
-<<<<<<< HEAD
       //console.log("Insert vertical index " + particle_index + " time to collision " + time_to_collision);      
-=======
-      console.log("Insert vertical index " + particle_index + " time to collision " + time_to_collision);
-      for(var j in simulator.events.arr) {
-          console.log(simulator.events.arr[j]);
-      }
->>>>>>> 345ca3b9d6f97716665ce75924eb86e98660cdfb
     }
   }
 
