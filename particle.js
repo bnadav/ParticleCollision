@@ -37,6 +37,16 @@ Particle.prototype.bounceY = function() {
   this.vy = -1*this.vy;
 }
 
+
+Particle.prototype.progress = function() {
+//  console.log("tick. progressing by " + t + ". Before " + this.y);
+  this.x += this.vx;
+  this.y += this.vy;
+//  console.log("After " + this.y);
+  return(this);
+}
+
+/*
 Particle.prototype.progress = function(t) {
 //  console.log("tick. progressing by " + t + ". Before " + this.y);
   this.x += this.vx*t;
@@ -44,3 +54,13 @@ Particle.prototype.progress = function(t) {
 //  console.log("After " + this.y);
   return(this);
 }
+*/
+/*
+Particle.prototype.progress = function(t) {
+    this.x += this.vx;
+    this.y += this.vy;
+    var _this = this;
+    if(t > 1) { setTimeout(function() { _this.progress(t-1)}, 10) }
+  //return(this);
+}
+*/

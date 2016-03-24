@@ -6,7 +6,14 @@
     <script src='particle.js'></script>
     <script> 
       simulator = {};
-      window.particles = [new Particle(20,20,10,1,0,-1,"red")];
+      window.particles = [new Particle(20,20,10,1,2,1,"red"),
+	  new Particle(30,30,10,1,0,1,"yellow"),
+	  new Particle(40,40,10,1,-1,-1,"blue"),
+	  new Particle(60,40,5,1,2,-4,"green")
+	  ];
+	  for(var i=1; i<10; i++) {
+	    window.particles.push(new Particle(Math.floor((Math.random() * 100) + 1), Math.floor((Math.random() * 100) + 1), 2, 1, Math.floor((Math.random() * 10) + 1), Math.floor((Math.random() * 10) + 1), "#"+((1<<24)*Math.random()|0).toString(16)));
+	  }
     </script> 
     <script src='event.js'></script>
     <script src='min_pq.js'></script>

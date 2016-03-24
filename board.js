@@ -12,13 +12,12 @@ simulator.board =
   },
 
   // x,y between 0-99
-  draw: function(ck) {
+  draw: function() {
     var real_x, real_y, p;
     var focus = this.width/100;
     if (focus != this.height/100) { console.log("width and height should be in the same proportion")}
     this.ctx.clearRect(0,0, this.width, this.height);
     for(var i=0; i < window.particles.length; i++) {
-      console.log("drawing " + 1);
       p = window.particles[i];
       real_x = p.x*focus;
       real_y = p.y*focus;
@@ -29,7 +28,6 @@ simulator.board =
       this.ctx.fillStyle = p.color;
       this.ctx.fill();
     }
-    ck();
-    //window.requestAnimationFrame(this.draw_loop.bind(this));
+    window.requestAnimationFrame(this.draw.bind(this));
   }
 }
