@@ -18,8 +18,8 @@ MinPq.prototype.del_min = function() {
   var last;
   if(this.any()) {
     min = this.min(); 
-    last = this.arr.pop()
-    if(this.l_index() > 1) {
+    last = this.arr.pop();
+    if(this.arr.length > 1) {
       this.arr[1] = last;
       this.sink(1);
     }
