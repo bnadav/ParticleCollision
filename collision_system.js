@@ -2,9 +2,10 @@ $(function(){
 
   window.timer = 0;
 
-  counter = 0;
-
   simulator.board.init($("canvas"), 400, 400);
+
+  // simulator.events = new MinPq();
+  dc = 0;
 
   insert_initial_events();
 
@@ -13,23 +14,22 @@ $(function(){
   fetch_collision();
 
   function insert_initial_events() {
-    for(var i=0; i<particles.length; i++) {
-      insert_horizontal_collisoin(i);
-      insert_vertical_collisoin(i);
-      for(var j=i+1; j<particles.length; j++) {
-        //  simulator.events.insert(new Event(particles[i].collides(j), i, j).to_dic());
-      }
-    }
+    //for(var i=0; i<particles.length; i++) {
+    insert_new_collisions(new Ev(0, 0, 1));
+    //}
   }
 
   function fetch_collision() {
     var event;
     if(simulator.events.any) {
+      //console.log(simulator.events);
       event = simulator.events.del_min().value;
-      var valid = event.valid();
-      if(event.valid()) { progress_time(event); }
-      else {
+      if(event.valid()) { 
+        //console.log("processing event "); console.log(event); 
+        progress_time(event); 
+      } else {
         console.log("Event no valid"); 
+        console.log(event);
         fetch_collision();   // ignore current event
       }
     }
@@ -37,88 +37,98 @@ $(function(){
 
   function progress_time(event) {
     var delta = event.time - timer;
-    var ev = event;
     tick();
 
     function tick() {
       //console.log("timer = " + timer + " event time " + ev.time);
-      if(timer <= ev.time) {
+      if(timer <= event.time) {
         particles.forEach(function(p){p.progress()});
-        //console.log(p.y);
-        //simulator.board.draw();
-		timer++;
-        setTimeout(tick, 100);
+        timer++;
+        setTimeout(tick, 10);
       }
       else {
-        after_draw(ev);
+        after_draw(event);
       }
     }
   }
 
   function after_draw(event) {
-   // console.log(event.pa_index + " " + particles[event.pa_index].y + " num evets " + simulator.events.l_index());
-    calculate_collisions(event);
+    update_velocities(event);
+    insert_new_collisions(event);
     fetch_collision();  // to next phase
   }
 
-  function calculate_collisions(event) {
-      //vertical_collision(event);
-      //simulator.board.draw(loop_action);
-      if (event.pa_index === null) { horizontal_collision(event) }
-      else if(event.pb_index == null) { vertical_collision(event) }
+
+  function update_velocities(e) {
+    var pair = get_pair(e);
+    var pa = pair[0]; 
+    var pb = pair[1];
+
+    if (pa === null) { pb.bounceX() }
+    else if(pb === null) { pa.bounceY() }
+    else { pa.bounce(pb)};
   }
 
-  function insert_vertical_collisoin(particle_index) {
-    var event;
+  function insert_new_collisions(e) {
+    var time_to_collision;
+    var timer_at_collision;
+    var t;
     var obj = {};
-    var particle = particles[particle_index];
-    var time_to_collision = particle.collidesY();
-    var c_time = + time_to_collision + timer;
-      //console.log("insert vertical Particle collision time " + c_time);
-    if(time_to_collision && (time_to_collision > 0) ) {
-      event = new Ev(c_time, particle_index, null);
-      obj.key = c_time; obj.value = event;
-      simulator.events.insert(obj);
-      //console.log("Insert vertical index " + particle_index + " time to collision " + time_to_collision);      
+
+
+    insert_x_collision(e.pa_index);
+    insert_x_collision(e.pb_index);
+    insert_y_collision(e.pa_index);
+    insert_y_collision(e.pb_index);
+    insert_pp_collision(e.pa_index);
+    insert_pp_collision(e.pb_index);
+
+    function insert_y_collision(p_index) {
+      if(p_index === null) {return}
+      var p = particles[p_index];
+      t = p.collidesY();
+      if(t && (t > 0)) { 
+        console.log("Inserting y collision at "  + (t+timer));
+        obj = {};
+        obj.key = t+timer; obj.value = new Ev(t+timer, p_index, null);
+        simulator.events.insert(obj);
+      }
+    }
+
+    function insert_x_collision(p_index) {
+      if(p_index === null) {return}
+      var p = particles[p_index];
+      t = p.collidesX();
+      if(t && (t > 0)) { 
+        console.log("Inserting x collision at " + (t+timer) + " for index " + p_index);
+        obj = {};
+        obj.key = t+timer; obj.value = new Ev(t+timer, null, p_index);
+        simulator.events.insert(obj);
+      }
+    }
+
+    function insert_pp_collision(p_index) {
+      var p;
+      if(p_index === null) {return}
+      for(var i=0; i<particles.length; i++) {
+        if(p_index !== i) {
+          p = particles[p_index];
+          t=p.collides(particles[i]);
+          if (t && t > 0 && t !== Infinity) { 
+            console.log("Inserting pp collision at " + (t+timer) + " t=" + t);
+            obj = {};
+            obj.key = t+timer; obj.value = new Ev(t+timer, p_index, i);
+            simulator.events.insert(obj);
+          }
+        }
+      }
     }
   }
 
-  function insert_horizontal_collisoin(particle_index) {
-    var event;
-    var obj = {};
-    var particle = particles[particle_index];
-    var time_to_collision = particle.collidesX();
-    var c_time = + time_to_collision + timer;
-      //console.log("insert horizontal Particle collision time " + c_time);
-    if(time_to_collision && (time_to_collision > 0) ) {
-      event = new Ev(c_time, null, particle_index);
-      obj.key = c_time; obj.value = event;
-      simulator.events.insert(obj);
-      //console.log("Insert horizontal index " + particle_index + " time to collision " + time_to_collision);      
-    }
-  }
-
-  /*
-     function progress_time(event) {
-     var delta = event.time - timer;
-     particles.forEach(function(p) {p.progress(delta)})
-     timer = event.time;
-     }
-     */
-
-
-  function horizontal_collision(e) {
-    //console.log("horizontal_collision");
-    var particle = particles[e.pb_index];
-    particle.bounceX();
-    insert_horizontal_collisoin(e.pb_index);
-  }
-
-  function vertical_collision(e) {
-    //console.log("vertical_collision");
-    var particle = particles[e.pa_index];
-    particle.bounceY();
-    insert_vertical_collisoin(e.pa_index);
+  function get_pair(e) {
+    var pa = e.pa_index == null ? null : particles[e.pa_index];
+    var pb = e.pb_index == null ? null : particles[e.pb_index];
+    return [pa, pb];
   }
 
 })

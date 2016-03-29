@@ -1,7 +1,6 @@
 simulator.board = 
   {
   init: function(element, height, width) {
-    console.log(this);
     this.elem = element;
     this.height = height;
     this.width = width;
