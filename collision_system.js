@@ -22,14 +22,12 @@ $(function(){
   function fetch_collision() {
     var event;
     if(simulator.events.any) {
-      //console.log(simulator.events);
       event = simulator.events.del_min().value;
       if(event.valid()) { 
-        //console.log("processing event "); console.log(event); 
         progress_time(event); 
       } else {
-        console.log("Event no valid"); 
-        console.log(event);
+        //console.log("Event no valid"); 
+        //console.log(event);
         fetch_collision();   // ignore current event
       }
     }
@@ -44,7 +42,7 @@ $(function(){
       if(timer <= event.time) {
         particles.forEach(function(p){p.progress()});
         timer++;
-        setTimeout(tick, 10);
+        setTimeout(tick, 1000);
       }
       else {
         after_draw(event);
@@ -88,7 +86,7 @@ $(function(){
       var p = particles[p_index];
       t = p.collidesY();
       if(t && (t > 0)) { 
-        console.log("Inserting y collision at "  + (t+timer));
+        console.log("Inserting y collision for " + p_index + " at "  + (t+timer));
         obj = {};
         obj.key = t+timer; obj.value = new Ev(t+timer, p_index, null);
         simulator.events.insert(obj);
@@ -100,7 +98,7 @@ $(function(){
       var p = particles[p_index];
       t = p.collidesX();
       if(t && (t > 0)) { 
-        console.log("Inserting x collision at " + (t+timer) + " for index " + p_index);
+        console.log("Inserting x collision for " + p_index + " at " + (t+timer) + " for index " + p_index);
         obj = {};
         obj.key = t+timer; obj.value = new Ev(t+timer, null, p_index);
         simulator.events.insert(obj);
@@ -115,7 +113,7 @@ $(function(){
           p = particles[p_index];
           t=p.collides(particles[i]);
           if (t && t > 0 && t !== Infinity) { 
-            console.log("Inserting pp collision at " + (t+timer) + " t=" + t);
+            console.log("Inserting pp collision " + p_index + " at " + (t+timer) + " t=" + t);
             obj = {};
             obj.key = t+timer; obj.value = new Ev(t+timer, p_index, i);
             simulator.events.insert(obj);

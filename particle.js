@@ -48,12 +48,12 @@ Particle.prototype.collides = function(that) {
 
 Particle.prototype.bounceX = function() {
   this.vx = -1*this.vx;
-  this.collision_counter++;
+  this.increment_collision_counter();
 }
 
 Particle.prototype.bounceY = function() {
   this.vy = -1*this.vy;
-  this.collision_counter++;
+  this.increment_collision_counter();
 }
 
 Particle.prototype.bounce = function(that) {
@@ -70,10 +70,15 @@ Particle.prototype.bounce = function(that) {
     this.vy += Jy / this.mass;
     that.vx -= Jx / that.mass;
     that.vy -= Jy / that.mass;
-    console.log("In bounce this new vx = " + this.vx);
-    console.log("In bounce that new vx = " + that.vx);
-    this.collision_counter++;
-    that.collision_counter++;
+    //console.log("In bounce this new vx = " + this.vx);
+    //console.log("In bounce that new vx = " + that.vx);
+    this.increment_collision_counter();
+    that.increment_collision_counter();
+}
+
+Particle.prototype.increment_collision_counter = function() {
+  this.collision_counter++;
+  console.log(this.color + ":" + this.collision_counter + ". time=" + timer);
 }
 
 
@@ -81,6 +86,11 @@ Particle.prototype.progress = function() {
 //  console.log("tick. progressing by " + t + ". Before " + this.y);
   this.x += this.vx;
   this.y += this.vy;
+
+  if(Math.abs(this.x) > 99 || Math.abs(this.y) > 99) {
+    console.log("timer="+timer);
+    console.log(this);
+    throw 'OVERFLOW'};
 //  console.log("After " + this.y);
   return(this);
 }

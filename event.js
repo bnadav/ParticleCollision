@@ -3,7 +3,7 @@ function Ev(time, particle_a, particle_b) {
   this.time = time;
   this.pa_index = particle_a;
   this.pb_index = particle_b;
-  this.pa_counter = this.bp_counter = 0;
+  this.pa_counter = this.pb_counter = 0;
   if(particle_a !== null) { this.pa_counter = particles[this.pa_index].collision_counter }
   if(particle_b !== null) { this.pb_counter = particles[this.pb_index].collision_counter }
 }
